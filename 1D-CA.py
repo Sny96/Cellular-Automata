@@ -3,12 +3,11 @@ import random
 
 class Environment():
    
-   r_x=0.4
-   r_y=0.3
-   max_move = 5
-   array_length = 100
-   
    def init(self):
+      self.seed = 1
+      random.seed(self.seed)
+      self.eps = 1E-3
+      
       self.r_x = 0.4
       self.r_y = 0.3
       self.max_move = 5
@@ -19,15 +18,15 @@ class Environment():
       self.old_pred_list = [0]*self.array_length
       
       self.time=0
-
+   
+   
    def update():
       self.time+=1
       self.old_pred_list = [x for x in pred_list]
       
       move_pred() #every pred moves
-      interaction() #pred health->1, prey->0 when interacting
-      reproduce() #spawn 
-      update_health() #increase prey health by r_x, reduce pred health by r_y
+      interaction() #pred health->1, prey->0 when interacting 
+      update_rep_death() #increase prey health by r_x, reduce pred health by r_y
 
    
    def get_preylist(self):
@@ -35,19 +34,48 @@ class Environment():
 
    def get_predlist(self):
       return self.pred_list
-
-   def get_numPreyPred():
-      return sum(self.prey_list), sum(self.pred_list) #Not true, needs to change
    
    def move_pred(): #How should we move our predators?? random?
       print(1)
       
       
-   def update_health():
-      self.pred_list = [(x-self.r_y) for x in self.pred_list if x!=0]
-      self.pred_list = [0 for x in self.pred_list if x<0]
+   def update_rep_death(self):
+      
+      for i in range(self.array_length):
+         if random.random()<self.r_x and self.prey_list[i]==1:
+            spawn_new_prey(i)
+         if random.random()<self.r_y and self.pred_list[i]==1:
+            self.pred_list[i] = 0
+      
+   def interaction(self):
+      index_list = []
+      for i in range(self.array_length):
+         if (self.prey_list[i] != 0 and self.pred_list != 0):
+            index_list.append(i)
+      
+      for index in random.choice(index_list):
+            self.prey_list[index] = 0
+            spawn_new_pred(index)
+            
+   def spawn_new_prey(self, i): 
+      if self.prey_list[i] == 0:
+         self.prey_list = 1
+      else:
+         r = random.choice([-1,1])
+         if self.prey_list[(i+r)%self.array_length]==0:
+            self.prey_list[(i+r)%self.array_length] = 1
+         elif self.prey_list[(i-r)%self.array_length]==0:
+            self.prey_list[(i-r)%self.array_length] = 1
    
-      self.prey_list = [(x+self.r_x) for x in self.prey_list if x!=0]
+   def spawn_new_pred(self, i): 
+      if self.pred_list[i] == 0:
+         self.pred_list = 1
+      else:
+         r = random.choice([-1,1])
+         if self.pred_list[(i+r)%self.array_length]==0:
+            self.pred_list[(i+r)%self.array_length] = 1
+         elif self.pred_list[(i-r)%self.array_length]==0:
+            self.pred_list[(i-r)%self.array_length] = 1
    
    def change_prey(index,num):
       
