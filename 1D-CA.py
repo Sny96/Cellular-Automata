@@ -35,16 +35,34 @@ class Environment():
    def get_predlist(self):
       return self.pred_list
    
-   def move_pred(): #How should we move our predators?? random?
-      print(1)
+   def move_all_pred(self): #How should we move our predators?? random?
+      pred_index_list = [index for index, value in enumerate(self.pred_list) if value == 1]
+      index_index_list = [index for index, value in enumerate(pred_index_list)]
+      direction_list=[random.choice([-1,1]) for x in index_list]
+      
+      for i in range(len(index_list)):
+         dist = index_list[i+direction_list[i]]-index_list[i]
+   
+   def move_one_pred(self, i, dist):
+      
       
       
    def update_rep_death(self):
+      index_list_prey = []
+      index_list_pred
       
       for i in range(self.array_length):
          if random.random()<self.r_x and self.prey_list[i]==1:
-            spawn_new_prey(i)
+            
          if random.random()<self.r_y and self.pred_list[i]==1:
+            self.pred_list[i] = 0
+            
+      for i in random.shuffle(index_list_prey):
+         if random.random()<self.r_x:
+            spawn_new_prey(i)
+            
+      for i in random.shuffle(index_list_prey):
+         if random.random()<self.r_y:
             self.pred_list[i] = 0
       
    def interaction(self):
@@ -53,7 +71,7 @@ class Environment():
          if (self.prey_list[i] != 0 and self.pred_list != 0):
             index_list.append(i)
       
-      for index in random.choice(index_list):
+      for index in random.shuffle(index_list):   
             self.prey_list[index] = 0
             spawn_new_pred(index)
             
