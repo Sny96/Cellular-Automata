@@ -112,14 +112,15 @@ def plotting_system(pop_matrix, name):
       plt.xlabel('Space')
       plt.ylabel('Time')
       plt.title(name)
-      plt.legend()
       plt.imshow(pop_matrix, cmap='Greys', origin='lower')
       
 def plotting_population(num_pred_list, num_prey_list):
+    timesteps = list(range(time_of_sim + 1))    #used to color-code the relative time
     plt.xlabel('Predators')
     plt.ylabel('Prey')
     plt.title("Preys Vs Predators for all Time-Steps")
-    plt.plot(num_pred_list, num_prey_list, 'ro')
+    #c=timesteps colorcodes the scatterplot so that earlier datapoint are violet and newer are yellow
+    plt.scatter(num_pred_list, num_prey_list, c=timesteps)
 
 def main():
    a = Environment()        #create instance of the class
@@ -143,6 +144,7 @@ def main():
       num_prey.append(c[0])
       num_pred.append(c[1])
       
+   #diplay the data
    plotting_population(num_pred, num_prey)
    plotting_system(prey_list, 'Preys')
    plotting_system(predator_list, 'Predators')
