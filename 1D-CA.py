@@ -2,6 +2,7 @@ import numpy as np
 import random
 from parameters import *
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 
 class Environment():
    
@@ -118,9 +119,64 @@ def plotting_population(num_pred_list, num_prey_list):
     timesteps = list(range(time_of_sim + 1))    #used to color-code the relative time
     plt.xlabel('Predators')
     plt.ylabel('Prey')
+#    plt.xlim(300,500)
+#    plt.ylim(600,800)
     plt.title("Preys Vs Predators for all Time-Steps")
     #c=timesteps colorcodes the scatterplot so that earlier datapoint are violet and newer are yellow
     plt.scatter(num_pred_list, num_prey_list, c=timesteps)
+    
+def plot_pred(num_prey_list, num_pred_list, MA):
+
+   if MA != 1:
+      for i in range(len(num_prey_list)-MA):
+         num_prey_list[i] = sum(num_prey_list[i:i+MA])/(MA)
+         num_pred_list[i] = sum(num_pred_list[i:i+MA])/(MA)
+      del num_prey_list[i:]
+      del num_pred_list[i:]
+   
+   fig, ax = plt.subplots()
+   ax.plot(num_pred_list[200:], 'r-')
+   ax.set_xlabel('time')
+   ax.set_ylabel('Prey population', color='red')
+   
+   ax2=ax.twinx()
+   ax2.plot(num_prey_list[200:], 'b-')
+   ax2.set_ylabel('Predator population', color='blue')   
+   plt.show()
+   
+def linear_function(x,a,b):
+   return a+b*x
+
+def pred_spatial_plot(num_prey_list, prey_list): #ej klar
+   index_pred = [index for index, value in enumerate(self.pred_list)]
+   diff_list = []
+   for i in range(len(index_pred)-1):
+      diff_list.append(index_pred[i+1]-index[i])
+      
+def diff_plot(num_prey_list, num_pred_list):
+   diff_list=[]
+   for i in range(len(num_pred_list)-1):
+      diff_list.append(num_pred_list[i+1]-num_pred_list[i])
+      
+   x = np.linspace(min(num_prey_list[200:]),max(num_prey_list[200:]), 100) #time[:num*2]
+   
+   init_vals = [1,1]
+   best_vals, covar = curve_fit(linear_function, num_prey_list[200:-1], diff_list[200:], p0=init_vals)
+   print(covar, best_vals  )
+   y = [linear_function(i, best_vals[0], best_vals[1]) for i in x]
+   fig, ax = plt.subplots()
+   ax.plot(x,y,'b-')
+   ax.plot(num_prey_list[200:-1],diff_list[200:], 'ro')
+   ax.set_xlabel('Prey population')
+   ax.set_ylabel('Predtor population growth', color='red')
+   
+#   ax2=ax.twinx()
+#   ax2.plot(diff_list[200:], 'b-')
+#   ax2.set_ylabel('Change in Prey population', color='blue')   
+   plt.show()
+
+#def log_pop(num_prey_list, num_pred_list):
+   
 
 def main():
    a = Environment()        #create instance of the class
@@ -148,6 +204,7 @@ def main():
    plotting_population(num_pred, num_prey)
    plotting_system(prey_list, 'Preys')
    plotting_system(predator_list, 'Predators')
+   diff_plot(num_prey, num_pred )
 
 if __name__ == "__main__":
    main()
