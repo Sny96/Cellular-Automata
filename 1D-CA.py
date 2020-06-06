@@ -2,6 +2,7 @@ import numpy as np
 import random
 from parameters import *
 import matplotlib.pyplot as plt
+import itertools as itertools
 
 class Environment():
    
@@ -15,6 +16,7 @@ class Environment():
       self.max_move = max_move
       self.array_length = array_length
       
+      #the lists that represent the system at each time-step
       self.prey_list = [0]*self.array_length
       self.pred_list = [0]*self.array_length
       
@@ -99,8 +101,17 @@ class Environment():
       for index in index_list:   
             self.prey_list[index] = 0
             self.spawn_new_pred(index)
-
-         
+            
+   def meanSqIterator(self, list1):
+       """Returns the mean square distance of the preys/predators from the provided list."""
+       sumOfMeanSq = 0
+       n = 0
+       list1_index_list = [index for index, value in enumerate(list1) if value == 1]
+       for pair in itertools.combinations(list1_index_list, 2):
+           sumOfMeanSq += (pair[0] - pair[1])**2
+           n += 1
+       return sumOfMeanSq/n
+      
    def update(self):
       self.time+=1
       self.move_all_pred() #every pred moves
@@ -120,7 +131,9 @@ def plotting_population(num_pred_list, num_prey_list):
     plt.ylabel('Prey')
     plt.title("Preys Vs Predators for all Time-Steps")
     #c=timesteps colorcodes the scatterplot so that earlier datapoint are violet and newer are yellow
-    plt.scatter(num_pred_list, num_prey_list, c=timesteps)
+    plt.scatter(num_pred_list, num_prey_list, c=timesteps, s=1)
+    #plt.xlim(15, 65)
+    #plt.ylim(750, 1000)
 
 def main():
    a = Environment()        #create instance of the class
@@ -143,6 +156,7 @@ def main():
       c = a.get_creatures()
       num_prey.append(c[0])
       num_pred.append(c[1])
+      #print(a.meanSqIterator(a.get_predlist()))
       
    #diplay the data
    plotting_population(num_pred, num_prey)
