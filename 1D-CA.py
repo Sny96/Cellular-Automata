@@ -105,7 +105,6 @@ class Environment():
             index_list.append(i)
       random.shuffle(index_list)
       for index in index_list:
-         print(index)
          self.prey_list[index] = 0
          self.spawn_new_pred(index)
    
@@ -226,7 +225,6 @@ def main():
 #   noice_approx = noise_approximation(pred_num,array_length,100)
    
    for seed in seedlist:
-      print(seed)
       a = Environment()        #create instance of the class
       a.init(seed)
       a.init_pred_prey(prey_num,pred_num)  #create the initial placements of predators/preys
@@ -240,7 +238,6 @@ def main():
       #runs the simulation though time-steps
       
       for i in range(time_of_sim):
-         print('update...')
          a.update()
    
          prey_list.append([x for x in a.get_preylist()])

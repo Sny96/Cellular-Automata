@@ -6,8 +6,8 @@ Created on Mon Jun  1 16:26:19 2020
 @author: sny
 """
 
-time_of_sim = 20
-array_length = 20
+time_of_sim = 100
+array_length = 1000
 seed = 3
 r_x = 0.2
 r_y = 0
