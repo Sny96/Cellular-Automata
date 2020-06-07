@@ -48,38 +48,10 @@ class Environment():
    def get_creatures(self):
       return sum(self.prey_list), sum(self.pred_list)
 
-<<<<<<< HEAD
-
-   def update_rep_death(self):
-      index_pred = [index for index, value in enumerate(self.pred_list) if value==1]
-      index_prey = [index for index, value in enumerate(self.prey_list) if value==1]
-      random.shuffle(index_prey)
-      random.shuffle(index_pred)
-      
-      for i in index_prey:
-         if random.random()<self.r_x:
-            self.spawn_new_prey(i)
-
-      for i in index_pred:
-=======
-   def move_all_pred(self): #chosen at random, moved in random direction
-      pred_index_list = [index for index, value in enumerate(self.pred_list) if value == 1]
-
-      for i in range(len(pred_index_list)):
-
-         pred_index_list = [index for index, value in enumerate(self.pred_list) if value == 1]
-         r = random.choice(pred_index_list)  #select a predator at random
-         direction = random.choice([-1,1])   #select the direction of movement at random
-         dist = self.pred_list[(r+direction)%self.array_length]-self.pred_list[r]
-         move = max(self.max_move, abs(dist)-1)
-         self.pred_list[r]=0
-         self.pred_list[(r+move*direction)%self.array_length] = 1
-
-
    def update_rep_death(self):
       """Based on the rates of reproduction (r_x) and starvation (r_y), updates the populations."""
-      index_pred = [index for index, value in enumerate(self.pred_list)]
-      index_prey = [index for index, value in enumerate(self.prey_list)]
+      index_pred = [index for index, value in enumerate(self.pred_list) if value==1]
+      index_prey = [index for index, value in enumerate(self.prey_list) if value==1]
       #rearrages the order to remove bias
       random.shuffle(index_prey)
       random.shuffle(index_pred)
@@ -89,48 +61,9 @@ class Environment():
             self.spawn_new_prey(i)
       #kills predators
       for i in index_pred: #potential bug fix
->>>>>>> 89dd9f97b780fee2b113a31b42750095cac5f3f3
          if random.random()<self.r_y:
             self.pred_list[i] = 0
-
-
-   def spawn_new_prey(self, i):
-<<<<<<< HEAD
-      r = random.choice([-1,1])
-      if self.prey_list[(i+r)%self.array_length]==0:
-         self.prey_list[(i+r)%self.array_length] = 1
-      elif self.prey_list[(i-r)%self.array_length]==0:
-         self.prey_list[(i-r)%self.array_length] = 1
-=======
-      """Checks if there are empty slots adjacent to i. If yes, spaws a new prey there."""
-      if self.prey_list[i] == 0:
-         self.prey_list[i] = 1
-      else:
-         r = random.choice([-1,1])
-         if self.prey_list[(i+r)%self.array_length]==0:
-            self.prey_list[(i+r)%self.array_length] = 1
-         elif self.prey_list[(i-r)%self.array_length]==0:
-            self.prey_list[(i-r)%self.array_length] = 1
->>>>>>> 89dd9f97b780fee2b113a31b42750095cac5f3f3
-
-   def spawn_new_pred(self, i):
-      """Checks if there are empty slots adjacent to i. If yes, spaws a new predator there."""
-      r = random.choice([-1,1])
-      if self.pred_list[(i+r)%self.array_length]==0:
-         self.pred_list[(i+r)%self.array_length] = 1
-      elif self.pred_list[(i-r)%self.array_length]==0:
-         self.pred_list[(i-r)%self.array_length] = 1
-
-   def interaction(self):
-      index_list = []
-      for i in range(self.array_length):
-         if (self.prey_list[i] == 1 and self.pred_list[i] == 1):
-            index_list.append(i)
-      random.shuffle(index_list)
-      for index in index_list:
-            self.prey_list[index] = 0
-            self.spawn_new_pred(index)
-            
+         
    def move_all_pred(self): #chosen at random, moved in random direction
       
       n = self.get_creatures()[1]
@@ -146,6 +79,35 @@ class Environment():
          move = min(abs(dist)-1, self.max_move)*direction
          self.pred_list[pred_index_list[r]]=0
          self.pred_list[(pred_index_list[(r)]+move)%self.array_length] = 1
+
+
+   def spawn_new_prey(self, i):
+      """Checks if there are empty slots adjacent to i. If yes, spaws a new prey there."""
+
+      r = random.choice([-1,1])
+      if self.prey_list[(i+r)%self.array_length]==0:
+         self.prey_list[(i+r)%self.array_length] = 1
+      elif self.prey_list[(i-r)%self.array_length]==0:
+         self.prey_list[(i-r)%self.array_length] = 1
+         
+   def spawn_new_pred(self, i):
+      """Checks if there are empty slots adjacent to i. If yes, spaws a new predator there."""
+      r = random.choice([-1,1])
+      if self.pred_list[(i+r)%self.array_length]==0:
+         self.pred_list[(i+r)%self.array_length] = 1
+      elif self.pred_list[(i-r)%self.array_length]==0:
+         self.pred_list[(i-r)%self.array_length] = 1
+
+   def interaction(self):
+      index_list = []
+      for i in range(self.array_length):
+         if (self.prey_list[i] == 1 and self.pred_list[i] == 1):
+            index_list.append(i)
+      random.shuffle(index_list)
+      for index in index_list:
+         print(index)
+         self.prey_list[index] = 0
+         self.spawn_new_pred(index)
    
    def update(self):
       self.time+=1
