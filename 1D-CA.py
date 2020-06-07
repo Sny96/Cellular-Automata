@@ -52,8 +52,8 @@ class Environment():
       for i in range(len(pred_index_list)):
 
          pred_index_list = [index for index, value in enumerate(self.pred_list) if value == 1]
-         r = random.choice(pred_index_list)
-         direction = random.choice([-1,1])
+         r = random.choice(pred_index_list)  #select a predator at random
+         direction = random.choice([-1,1])   #select the direction of movement at random
          dist = self.pred_list[(r+direction)%self.array_length]-self.pred_list[r]
          move = max(self.max_move, abs(dist)-1)
          self.pred_list[r]=0
@@ -61,21 +61,36 @@ class Environment():
 
 
    def update_rep_death(self):
+      """Based on the rates of reproduction (r_x) and starvation (r_y), updates the populations."""
       index_pred = [index for index, value in enumerate(self.pred_list)]
       index_prey = [index for index, value in enumerate(self.prey_list)]
+      #rearrages the order to remove bias
       random.shuffle(index_prey)
       random.shuffle(index_pred)
+<<<<<<< HEAD
 
       for i in index_prey:
          if random.random()<self.r_x:
             self.spawn_new_prey(i)
 
       for i in index_prey:
+=======
+      #spawns new prey
+      for i in index_prey:
+         if random.random()<self.r_x:
+            self.spawn_new_prey(i)
+      #kills predators
+      for i in index_pred: #potential bug fix
+>>>>>>> 89dd9f97b780fee2b113a31b42750095cac5f3f3
          if random.random()<self.r_y:
             self.pred_list[i] = 0
 
 
    def spawn_new_prey(self, i):
+<<<<<<< HEAD
+=======
+      """Checks if there are empty slots adjacent to i. If yes, spaws a new prey there."""
+>>>>>>> 89dd9f97b780fee2b113a31b42750095cac5f3f3
       if self.prey_list[i] == 0:
          self.prey_list[i] = 1
       else:
@@ -86,6 +101,10 @@ class Environment():
             self.prey_list[(i-r)%self.array_length] = 1
 
    def spawn_new_pred(self, i):
+<<<<<<< HEAD
+=======
+      """Checks if there are empty slots adjacent to i. If yes, spaws a new predator there."""
+>>>>>>> 89dd9f97b780fee2b113a31b42750095cac5f3f3
       r = random.choice([-1,1])
       if self.pred_list[(i+r)%self.array_length]==0:
          self.pred_list[(i+r)%self.array_length] = 1
